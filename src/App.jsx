@@ -2,6 +2,7 @@
 import Navbar from "./Navbar";
 import Course from "./Course";
 
+//For images
 import html from './Image/html.png';
 import css from './Image/css.png';
 import js from './Image/js.png';
