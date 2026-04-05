@@ -7,38 +7,46 @@ function CourseList() {
   // creating a list of objects
   const courses = [
     {
+      id:1,
       name: "Html",
-      price: "₹99",
+      price: 99,
       image: html,
       rating: 5,
       login: true,
     },
     {
+      id:2,
       name: "CSS",
-      price: "₹299",
+      price: 299,
       image: css,
       rating: 5,
       login: true,
     },
     {
+      id:3,
       name: "JS",
-      price: "₹499",
+      price: 499,
       image: js,
       rating: 5,
       login: true,
     },
     {
+      id: 4,
       name: "React",
-      price: "₹799",
+      price: 799,
       image: js,
       rating: 5,
       login: true,
     },
   ];
 
-  const courseList = courses.map((course) => (
+  const filteredCourses = courses
+    .filter((course) => course.price < 500)
+    .sort((a, b) => a.price - b.price);
+
+  const courseList = filteredCourses.map((course) => (
     <Course
-      key={course.name}
+      key={course.id}
       name={course.name}
       price={course.price}
       image={course.image}

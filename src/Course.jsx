@@ -5,11 +5,11 @@ import PropTypes from "prop-types"
 function Course(props){
 
     return(
-        <div className="card">
+        props.name && <div className="card">
             <img src={props.image} alt="Image"/>
             <h1>{props.name}</h1>
             <h1>{props.price}</h1>
-            <span>Rating : {props.rating}</span>
+            <span>{props.rating}</span>
         </div>
     );
 }
