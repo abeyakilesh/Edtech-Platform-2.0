@@ -1,1 +1,1 @@
-This is an Instagram Clone Under Developement
+This is an Edtech platform under Developement
