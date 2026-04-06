@@ -1,22 +1,29 @@
-//This is a course component
+// importing a default image in case a course image is missing
 import Loading from "./Image/Loading.png";
-import PropTypes from "prop-types"
 
-function Course(props){
+// Course is a reusable card component
+// props contains the data sent from CourseList.jsx
+function Course(props) {
+  // if the course name is missing, this card will not render
+  // the expression after && only runs when props.name exists
+  return (
+    props.name && (
+      <div className="card">
+        {/* course image */}
+        <img src={props.image || Loading} alt="Course" />
 
-    return(
-        props.name && <div className="card">
-            <img src={props.image} alt="Image"/>
-            <h1>{props.name}</h1>
-            <h1>{props.price}</h1>
-            <span>{props.rating}</span>
-        </div>
-    );
+        {/* course title */}
+        <h1>{props.name}</h1>
+
+        {/* course price */}
+        <h1>{props.price}</h1>
+
+        {/* course rating */}
+        <span>{props.rating}</span>
+      </div>
+    )
+  );
 }
 
-//default values
-
-export default Course
-
-//since course and its component structure is same and we only need to use the structure again
-//we are using props to update values accordingly from java script from some where else!
+// exporting this component so CourseList.jsx can use it many times
+export default Course;
