@@ -5,6 +5,7 @@ import Course from "./Course";
 import html from "./Image/html.png";
 import css from "./Image/css.png";
 import js from "./Image/js.png";
+import react from "./Image/react.png";
 
 // this component creates and displays the full course list
 function CourseList() {
@@ -45,7 +46,7 @@ function CourseList() {
       id: 4,
       name: "React",
       price: 799,
-      image: js,
+      image: react,
       rating: 5,
       login: true,
     },
@@ -60,25 +61,12 @@ function CourseList() {
   // map goes through each course object one by one
   // for every object, it creates one <Course /> component
   const courseList = courses.map((course) => (
+    
     <Course
-      // key helps React uniquely identify each item in the list
-      key={course.id}
-
-      // sending the course name as prop
-      name={course.name}
-
-      // sending the course price as prop
-      price={course.price}
-
-      // sending the course image as prop
-      image={course.image}
-
-      // sending the course rating as prop
-      rating={course.rating}
-
-      // sending the login/show condition as prop
-      login={course.login}
+      key={course.id} name={course.name} price={course.price}
+      image={course.image} rating={course.rating} login={course.login} 
     />
+
   ));
 
   // return the final UI

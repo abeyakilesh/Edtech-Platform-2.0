@@ -92,5 +92,24 @@ body {
   color: #2e8b57;
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* rating text inside the card */
+.card span {
+  display: block;
+  margin-bottom: 16px;
+  color: #555555;
+  font-weight: 600;
+}
+
+.buy-btn {
+  background-color: rgb(31, 140, 170);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
   margin-bottom: 25px;
 }
