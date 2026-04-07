@@ -232,9 +232,15 @@ export const demoProgress = [
     _id: "progress-1",
     userId: "student-1",
     courseId: "course-1",
-    completion: 60,
-    completedModules: ["module-course-1-1", "module-course-1-2", "module-course-1-3"],
-    lastModuleId: "module-course-1-3",
+    completion: 100,
+    completedModules: [
+      "module-course-1-1",
+      "module-course-1-2",
+      "module-course-1-3",
+      "module-course-1-4",
+      "module-course-1-5",
+    ],
+    lastModuleId: "module-course-1-5",
     quizScores: [{ quizId: "quiz-course-1", score: 80 }],
   },
   {
@@ -264,4 +270,3 @@ export const demoUsers = [
     role: "student",
   },
 ];
-

@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { createCourse, createModule, createQuiz, fetchCourses, fetchUsers } from "../services/courseService";
+import { uploadMedia } from "../services/mediaService";
 
 function AdminPanelPage() {
   const { token } = useAuth();
   const [courses, setCourses] = useState([]);
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState("");
+  const [uploading, setUploading] = useState({ thumbnail: false, video: false });
   const [courseForm, setCourseForm] = useState({
     title: "",
     slug: "",
@@ -112,6 +114,29 @@ function AdminPanelPage() {
     setStatus("Quiz created successfully");
   }
 
+  async function handleFileUpload(field, file) {
+    if (!file) return;
+
+    setUploading((current) => ({ ...current, [field]: true }));
+    try {
+      const response = await uploadMedia(file, token);
+
+      if (field === "thumbnail") {
+        setCourseForm((current) => ({ ...current, thumbnail: response.url }));
+      }
+
+      if (field === "video") {
+        setModuleForm((current) => ({ ...current, videoUrl: response.url }));
+      }
+
+      setStatus(`Uploaded ${field} successfully via ${response.provider}`);
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      setUploading((current) => ({ ...current, [field]: false }));
+    }
+  }
+
   function updateForm(setter) {
     return (event) => setter((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
@@ -143,6 +168,16 @@ function AdminPanelPage() {
               <input className="input-field" name={name} value={courseForm[name]} onChange={updateForm(setCourseForm)} required />
             </div>
           ))}
+          <div>
+            <label className="mb-2 block text-sm text-slate-300">Upload thumbnail</label>
+            <input
+              className="input-field"
+              type="file"
+              accept="image/*"
+              onChange={(event) => handleFileUpload("thumbnail", event.target.files?.[0])}
+            />
+            {uploading.thumbnail && <p className="mt-2 text-xs text-cyan-200">Uploading image...</p>}
+          </div>
           <button className="primary-button w-full">Create course</button>
         </form>
 
@@ -168,6 +203,16 @@ function AdminPanelPage() {
               <input className="input-field" name={name} value={moduleForm[name]} onChange={updateForm(setModuleForm)} required />
             </div>
           ))}
+          <div>
+            <label className="mb-2 block text-sm text-slate-300">Upload lesson media</label>
+            <input
+              className="input-field"
+              type="file"
+              accept="video/*,image/*"
+              onChange={(event) => handleFileUpload("video", event.target.files?.[0])}
+            />
+            {uploading.video && <p className="mt-2 text-xs text-cyan-200">Uploading media...</p>}
+          </div>
           <button className="primary-button w-full">Add module</button>
         </form>
 

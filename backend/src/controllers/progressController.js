@@ -2,6 +2,7 @@ import { dbState } from "../config/db.js";
 import { createMemoryId, memoryStore } from "../data/memoryStore.js";
 import { Course } from "../models/Course.js";
 import { Module } from "../models/Module.js";
+import { Payment } from "../models/Payment.js";
 import { Progress } from "../models/Progress.js";
 
 export async function getProgressByUser(req, res) {
@@ -94,20 +95,38 @@ export async function getDashboardOverview(req, res) {
 
   if (dbState.connected) {
     const progress = await Progress.find({ userId });
+    const payments = await Payment.find({ userId, status: "paid" }).sort({ createdAt: -1 });
     const courses = await Course.find({
-      _id: { $in: progress.map((item) => item.courseId) },
+      _id: { $in: [...new Set([...progress.map((item) => item.courseId), ...payments.map((item) => item.courseId)])] },
     });
 
     const byCourse = new Map(courses.map((course) => [String(course._id), course]));
-    const enrolledCourses = progress.map((item) => ({
-      progress: item.completion,
-      lastModuleId: item.lastModuleId,
-      quizScores: item.quizScores,
-      course: byCourse.get(String(item.courseId)),
+    const progressMap = new Map(progress.map((item) => [String(item.courseId), item]));
+    const enrolledCourses = [...new Set(payments.map((item) => String(item.courseId)).concat(progress.map((item) => String(item.courseId))))]
+      .map((courseId) => {
+        const item = progressMap.get(courseId);
+        return {
+          progress: item?.completion || 0,
+          lastModuleId: item?.lastModuleId || "",
+          quizScores: item?.quizScores || [],
+          course: byCourse.get(courseId),
+        };
+      })
+      .filter((item) => item.course);
+    const certificates = enrolledCourses
+      .filter((item) => item.progress >= 100)
+      .map((item) => ({ courseId: item.course?._id, title: item.course?.title }));
+    const recentActivity = payments.slice(0, 5).map((payment) => ({
+      type: "purchase",
+      title: byCourse.get(String(payment.courseId))?.title || "Course purchase",
+      createdAt: payment.createdAt,
+      amount: payment.amount,
     }));
 
     return res.json({
       enrolledCourses,
+      certificates,
+      recentActivity,
       stats: {
         enrolledCount: enrolledCourses.length,
         averageProgress:
@@ -122,22 +141,46 @@ export async function getDashboardOverview(req, res) {
 
   const enrolledCourses = memoryStore.progress
     .filter((item) => item.userId === userId)
-    .map((item) => ({
-      progress: item.completion,
-      lastModuleId: item.lastModuleId,
-      quizScores: item.quizScores,
-      course: memoryStore.courses.find((course) => course._id === item.courseId),
-    }))
+    .reduce((map, item) => map.set(item.courseId, item), new Map());
+  const paidCourseIds = memoryStore.payments
+    .filter((item) => item.userId === userId && item.status === "paid")
+    .map((item) => item.courseId);
+  const enrolledCourseIds = [...new Set([...paidCourseIds, ...enrolledCourses.keys()])];
+  const enrolledCourseList = enrolledCourseIds
+    .map((courseId) => {
+      const item = enrolledCourses.get(courseId);
+      return {
+        progress: item?.completion || 0,
+        lastModuleId: item?.lastModuleId || "",
+        quizScores: item?.quizScores || [],
+        course: memoryStore.courses.find((course) => course._id === courseId),
+      };
+    })
     .filter((item) => item.course);
+  const certificates = enrolledCourseList
+    .filter((item) => item.progress >= 100)
+    .map((item) => ({ courseId: item.course?._id, title: item.course?.title }));
+  const recentActivity = memoryStore.payments
+    .filter((item) => item.userId === userId && item.status === "paid")
+    .slice(-5)
+    .reverse()
+    .map((payment) => ({
+      type: "purchase",
+      title: memoryStore.courses.find((course) => course._id === payment.courseId)?.title || "Course purchase",
+      createdAt: payment.createdAt || new Date().toISOString(),
+      amount: payment.amount,
+    }));
 
   return res.json({
-    enrolledCourses,
+    enrolledCourses: enrolledCourseList,
+    certificates,
+    recentActivity,
     stats: {
-      enrolledCount: enrolledCourses.length,
+      enrolledCount: enrolledCourseList.length,
       averageProgress:
-        enrolledCourses.length > 0
+        enrolledCourseList.length > 0
           ? Math.round(
-              enrolledCourses.reduce((sum, item) => sum + item.progress, 0) / enrolledCourses.length
+              enrolledCourseList.reduce((sum, item) => sum + item.progress, 0) / enrolledCourseList.length
             )
           : 0,
     },

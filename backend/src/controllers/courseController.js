@@ -2,6 +2,7 @@ import { dbState } from "../config/db.js";
 import { createMemoryId, memoryStore } from "../data/memoryStore.js";
 import { Course } from "../models/Course.js";
 import { Module } from "../models/Module.js";
+import { Payment } from "../models/Payment.js";
 import { Progress } from "../models/Progress.js";
 import { Quiz } from "../models/Quiz.js";
 import { User } from "../models/User.js";
@@ -10,10 +11,13 @@ function normalizeCourse(course, userId) {
   const progress = memoryStore.progress.find(
     (item) => item.userId === userId && item.courseId === course._id
   );
+  const payment = memoryStore.payments.find(
+    (item) => item.userId === userId && item.courseId === course._id && item.status === "paid"
+  );
 
   return {
     ...course,
-    enrolled: Boolean(progress),
+    enrolled: Boolean(progress || payment),
     progress: progress?.completion || 0,
   };
 }
@@ -27,12 +31,14 @@ export async function getCourses(req, res) {
     }
 
     const progress = await Progress.find({ userId: req.user._id });
+    const payments = await Payment.find({ userId: req.user._id, status: "paid" });
     const progressMap = new Map(progress.map((item) => [String(item.courseId), item]));
+    const paymentSet = new Set(payments.map((item) => String(item.courseId)));
 
     return res.json(
       courses.map((course) => ({
         ...course.toObject(),
-        enrolled: progressMap.has(String(course._id)),
+        enrolled: progressMap.has(String(course._id)) || paymentSet.has(String(course._id)),
         progress: progressMap.get(String(course._id))?.completion || 0,
       }))
     );
@@ -57,12 +63,14 @@ export async function getCourseById(req, res) {
     const modules = await Module.find({ courseId: id }).sort({ order: 1 });
     const quiz = await Quiz.findOne({ courseId: id });
     const progress = req.user ? await Progress.findOne({ userId: req.user._id, courseId: id }) : null;
+    const payment = req.user ? await Payment.findOne({ userId: req.user._id, courseId: id, status: "paid" }) : null;
 
     return res.json({
       ...course.toObject(),
       modules,
       quiz,
       progress,
+      enrolled: Boolean(progress || payment),
     });
   }
 
@@ -78,8 +86,13 @@ export async function getCourseById(req, res) {
   const progress = req.user
     ? memoryStore.progress.find((item) => item.userId === req.user._id && item.courseId === id) || null
     : null;
+  const payment = req.user
+    ? memoryStore.payments.find(
+        (item) => item.userId === req.user._id && item.courseId === id && item.status === "paid"
+      ) || null
+    : null;
 
-  return res.json({ ...course, modules, quiz, progress });
+  return res.json({ ...course, modules, quiz, progress, enrolled: Boolean(progress || payment) });
 }
 
 export async function createCourse(req, res) {

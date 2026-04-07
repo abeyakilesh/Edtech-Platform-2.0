@@ -9,6 +9,8 @@ import CourseDetailPage from "./pages/CourseDetailPage";
 import VideoPage from "./pages/VideoPage";
 import QuizPage from "./pages/QuizPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
@@ -20,6 +22,22 @@ function App() {
         <Route path="/signup" element={<AuthPage mode="signup" />} />
         <Route path="/courses" element={<CourseListingPage />} />
         <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+        <Route
+          path="/checkout/:courseId"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout/success"
+          element={
+            <ProtectedRoute>
+              <CheckoutSuccessPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/dashboard"

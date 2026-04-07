@@ -3,11 +3,17 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProgressBar from "../components/ProgressBar";
 import { useAuth } from "../context/AuthContext";
+import { downloadCertificate } from "../services/certificateService";
 import { fetchDashboardOverview } from "../services/progressService";
 
 function DashboardPage() {
   const { token, user } = useAuth();
-  const [overview, setOverview] = useState({ enrolledCourses: [], stats: { enrolledCount: 0, averageProgress: 0 } });
+  const [overview, setOverview] = useState({
+    enrolledCourses: [],
+    certificates: [],
+    recentActivity: [],
+    stats: { enrolledCount: 0, averageProgress: 0 },
+  });
 
   useEffect(() => {
     fetchDashboardOverview(token).then(setOverview).catch(() => {});
@@ -82,9 +88,61 @@ function DashboardPage() {
               <Link to={`/quiz/${item.course?._id}`} className="primary-button">
                 Retake quiz
               </Link>
+              {item.progress >= 100 && (
+                <button
+                  className="glass-button"
+                  onClick={() => downloadCertificate(item.course?._id, token)}
+                >
+                  Download certificate
+                </button>
+              )}
             </div>
           </div>
         ))}
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2">
+        <div className="glass-card p-6">
+          <h2 className="text-2xl font-semibold">Certificates</h2>
+          <div className="mt-5 space-y-3">
+            {overview.certificates.length === 0 && (
+              <p className="text-sm text-slate-300">Complete a course to unlock certificates.</p>
+            )}
+            {overview.certificates.map((certificate) => (
+              <div
+                key={certificate.courseId}
+                className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4"
+              >
+                <span>{certificate.title}</span>
+                <button
+                  className="glass-button"
+                  onClick={() => downloadCertificate(certificate.courseId, token)}
+                >
+                  Download PDF
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="glass-card p-6">
+          <h2 className="text-2xl font-semibold">Recent activity</h2>
+          <div className="mt-5 space-y-3">
+            {overview.recentActivity.length === 0 && (
+              <p className="text-sm text-slate-300">Your purchases and learning milestones will appear here.</p>
+            )}
+            {overview.recentActivity.map((activity, index) => (
+              <div key={`${activity.title}-${index}`} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                <p className="font-medium">{activity.title}</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cyan-200">{activity.type}</p>
+                <p className="mt-2 text-sm text-slate-300">
+                  {new Date(activity.createdAt).toLocaleString("en-IN")}
+                  {activity.amount ? ` • ₹${activity.amount}` : ""}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </main>
   );

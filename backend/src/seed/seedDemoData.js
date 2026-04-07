@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { env } from "../config/env.js";
 import { Course } from "../models/Course.js";
 import { Module } from "../models/Module.js";
+import { Payment } from "../models/Payment.js";
 import { Progress } from "../models/Progress.js";
 import { Quiz } from "../models/Quiz.js";
 import { User } from "../models/User.js";
@@ -20,6 +21,7 @@ await Promise.all([
   Module.deleteMany({}),
   Quiz.deleteMany({}),
   Progress.deleteMany({}),
+  Payment.deleteMany({}),
 ]);
 
 const [adminUser, studentUser] = await User.create([
@@ -70,6 +72,16 @@ await Progress.insertMany(
     })),
   }))
 );
+
+await Payment.create({
+  userId: studentUser._id,
+  courseId: courseMap.get("course-1"),
+  amount: 999,
+  currency: "inr",
+  provider: "demo",
+  status: "paid",
+  sessionId: "seed-payment-1",
+});
 
 console.log("EduCore demo data seeded successfully.");
 await mongoose.disconnect();

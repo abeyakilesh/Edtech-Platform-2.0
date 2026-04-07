@@ -6,6 +6,7 @@ export const memoryStore = {
   modules: structuredClone(demoModules),
   quizzes: structuredClone(demoQuizzes),
   progress: structuredClone(demoProgress),
+  payments: [],
 };
 
 export const createMemoryId = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;

@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import ProgressBar from "../components/ProgressBar";
 import { useAuth } from "../context/AuthContext";
 import { fetchCourse } from "../services/courseService";
-import { updateProgress } from "../services/progressService";
 import { formatCurrency } from "../utils/formatters";
 
 function CourseDetailPage() {
@@ -24,9 +23,13 @@ function CourseDetailPage() {
       return;
     }
 
+    if (!course.enrolled) {
+      navigate(`/checkout/${courseId}`);
+      return;
+    }
+
     setBusy(true);
     try {
-      await updateProgress({ courseId, completion: 0 }, token);
       navigate(`/learn/${courseId}/${course.modules?.[0]?._id}`);
     } finally {
       setBusy(false);
@@ -74,8 +77,13 @@ function CourseDetailPage() {
             <p className="text-3xl font-semibold">{formatCurrency(course.price)}</p>
             <ProgressBar value={course.progress || 0} />
             <button onClick={handleEnroll} className="primary-button w-full" disabled={busy}>
-              {busy ? "Preparing..." : course.progress ? "Resume learning" : "Enroll and start"}
+              {busy ? "Preparing..." : course.enrolled ? "Start or resume learning" : "Enroll with Stripe"}
             </button>
+            {!course.enrolled && (
+              <p className="text-xs leading-6 text-slate-400">
+                The course unlocks immediately after payment. If Stripe keys are not configured yet, EduCore uses a local demo checkout so you can keep developing.
+              </p>
+            )}
             {course.modules?.[0] && (
               <Link to={`/quiz/${courseId}`} className="glass-button w-full justify-center">
                 Take course quiz
