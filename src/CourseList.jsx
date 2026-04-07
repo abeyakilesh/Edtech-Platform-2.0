@@ -73,7 +73,7 @@ function CourseList() {
   // {courseList} displays all Course components created by map
   return (
     <div className="course-list">
-      {courseList}
+      {courseList} 
     </div>
   );
 }
