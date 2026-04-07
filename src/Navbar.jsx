@@ -2,13 +2,13 @@
 function Navbar() {
   return (
     <header className="navbar">
-      <div className="brand-block">
+      <a className="brand-block" href="#home" aria-label="Go to homepage">
         <span className="brand-mark">E</span>
         <div>
           <h3>EduCore</h3>
           <p>Learn. Build. Get hired.</p>
         </div>
-      </div>
+      </a>
 
       <nav className="nav-links">
         <a href="#home">Home</a>
@@ -17,7 +17,9 @@ function Navbar() {
         <a href="#contact">Contact</a>
       </nav>
 
-      <button className="nav-cta">Start Learning</button>
+      <a className="nav-cta" href="#programs">
+        Start Learning
+      </a>
     </header>
   );
 }

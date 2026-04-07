@@ -12,6 +12,7 @@ function CourseList() {
   const courses = [
     {
       id: 1,
+      slug: "html-foundations",
       name: "HTML Foundations",
       price: 99,
       image: html,
@@ -23,6 +24,7 @@ function CourseList() {
     },
     {
       id: 2,
+      slug: "css-mastery",
       name: "CSS Mastery",
       price: 299,
       image: css,
@@ -34,6 +36,7 @@ function CourseList() {
     },
     {
       id: 3,
+      slug: "javascript-bootcamp",
       name: "JavaScript Bootcamp",
       price: 499,
       image: js,
@@ -45,6 +48,7 @@ function CourseList() {
     },
     {
       id: 4,
+      slug: "react-development",
       name: "React Development",
       price: 799,
       image: react,
@@ -56,6 +60,7 @@ function CourseList() {
     },
     {
       id: 5,
+      slug: "node-backend",
       name: "Node.js Backend",
       price: 999,
       image: react,
@@ -72,6 +77,7 @@ function CourseList() {
   const courseList = courses.map((course) => (
     <Course
       key={course.id}
+      id={course.slug}
       name={course.name}
       price={course.price}
       image={course.image}
@@ -79,6 +85,8 @@ function CourseList() {
       level={course.level}
       lessons={course.lessons}
       description={course.description}
+      detailsHref={`#${course.slug}`}
+      ctaHref="#contact"
       login={course.login}
     />
   ));
