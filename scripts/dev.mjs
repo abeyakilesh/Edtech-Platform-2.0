@@ -5,13 +5,13 @@ const processes = [
     name: "server",
     color: "\x1b[36m",
     command: "npm",
-    args: ["run", "dev:server"],
+    args: ["run", "dev", "--workspace", "backend"],
   },
   {
     name: "client",
     color: "\x1b[35m",
     command: "npm",
-    args: ["run", "dev:client"],
+    args: ["run", "dev", "--workspace", "frontend"],
   },
 ];
 

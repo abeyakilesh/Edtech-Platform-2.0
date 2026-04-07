@@ -2,6 +2,12 @@
 
 EduCore is a full-stack EdTech platform built with React, Tailwind CSS, Framer Motion, Express, and MongoDB. It includes student and admin flows, JWT authentication, course enrollment, lesson playback, quizzes, progress tracking, and seeded demo content.
 
+## Project structure
+
+- `frontend/` contains the Vite + React + Tailwind application
+- `backend/` contains the Express + MongoDB API
+- `scripts/` contains root-level developer helpers
+
 ## Run locally
 
 1. Install packages:
@@ -10,7 +16,7 @@ EduCore is a full-stack EdTech platform built with React, Tailwind CSS, Framer M
 npm install
 ```
 
-2. Copy `.env.example` to `.env` and update values if needed.
+2. Copy `backend/.env.example` to `backend/.env` and update values if needed.
 
 3. Start the full stack app:
 
