@@ -24,6 +24,14 @@ const children = processes.map(({ name, color, command, args }) => {
   const prefix = `${color}[${name}]\x1b[0m`;
   child.stdout.on("data", (chunk) => process.stdout.write(`${prefix} ${chunk}`));
   child.stderr.on("data", (chunk) => process.stderr.write(`${prefix} ${chunk}`));
+  child.on("exit", (code) => {
+    if (code && code !== 0) {
+      children
+        .filter((runningChild) => runningChild.pid && runningChild.pid !== child.pid)
+        .forEach((runningChild) => runningChild.kill("SIGINT"));
+      process.exit(code);
+    }
+  });
 
   return child;
 });
