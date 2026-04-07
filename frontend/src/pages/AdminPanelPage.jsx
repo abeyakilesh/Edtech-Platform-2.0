@@ -42,14 +42,31 @@ function AdminPanelPage() {
     ),
   });
 
-  async function loadData() {
-    const [courseData, userData] = await Promise.all([fetchCourses(), fetchUsers(token)]);
-    setCourses(courseData);
-    setUsers(userData);
-  }
-
   useEffect(() => {
-    loadData().catch(() => setStatus("Unable to load admin data"));
+    let active = true;
+
+    async function hydrateAdmin() {
+      try {
+        const [courseData, userData] = await Promise.all([fetchCourses(), fetchUsers(token)]);
+
+        if (!active) {
+          return;
+        }
+
+        setCourses(courseData);
+        setUsers(userData);
+      } catch (_error) {
+        if (active) {
+          setStatus("Unable to load admin data");
+        }
+      }
+    }
+
+    hydrateAdmin();
+
+    return () => {
+      active = false;
+    };
   }, [token]);
 
   const courseOptions = useMemo(
@@ -68,14 +85,18 @@ function AdminPanelPage() {
       token
     );
     setStatus("Course created successfully");
-    loadData();
+    const [courseData, userData] = await Promise.all([fetchCourses(), fetchUsers(token)]);
+    setCourses(courseData);
+    setUsers(userData);
   }
 
   async function handleCreateModule(event) {
     event.preventDefault();
     await createModule(moduleForm.courseId, { ...moduleForm, order: Number(moduleForm.order) }, token);
     setStatus("Module added successfully");
-    loadData();
+    const [courseData, userData] = await Promise.all([fetchCourses(), fetchUsers(token)]);
+    setCourses(courseData);
+    setUsers(userData);
   }
 
   async function handleCreateQuiz(event) {

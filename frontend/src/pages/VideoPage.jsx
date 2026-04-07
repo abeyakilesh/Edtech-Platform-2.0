@@ -1,5 +1,5 @@
 import { ChevronRight, CircleCheckBig, NotebookPen } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import VideoPlayer from "../components/VideoPlayer";
 import { useAuth } from "../context/AuthContext";

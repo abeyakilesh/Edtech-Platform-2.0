@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, GraduationCap, LayoutDashboard, LogOut, ShieldCheck } from "lucide-react";
+import { BookOpen, GraduationCap, LogOut, ShieldCheck } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { initials } from "../utils/formatters";
