@@ -5,6 +5,14 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -12,34 +20,64 @@
   body {
     @apply min-h-screen bg-slate-950 font-sans text-slate-100 antialiased;
     background-image:
-      radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 20%),
-      radial-gradient(circle at top right, rgba(139, 92, 246, 0.2), transparent 24%),
-      linear-gradient(180deg, #040816 0%, #081022 50%, #050915 100%);
+      radial-gradient(circle at 0% 8%, rgba(34, 211, 238, 0.14), transparent 24%),
+      radial-gradient(circle at 100% 10%, rgba(139, 92, 246, 0.18), transparent 28%),
+      radial-gradient(circle at 50% 42%, rgba(14, 165, 233, 0.08), transparent 34%),
+      linear-gradient(180deg, #020611 0%, #061022 42%, #050915 100%);
+  }
+
+  html[data-theme="light"] body {
+    color: #10203a;
+    background-image:
+      radial-gradient(circle at 0% 8%, rgba(8, 145, 178, 0.14), transparent 24%),
+      radial-gradient(circle at 100% 10%, rgba(124, 58, 237, 0.12), transparent 28%),
+      radial-gradient(circle at 50% 38%, rgba(56, 189, 248, 0.08), transparent 32%),
+      linear-gradient(180deg, #f7fbff 0%, #eef5ff 44%, #edf3fa 100%);
   }
 
   #root {
     @apply min-h-screen;
   }
+
+  ::selection {
+    @apply bg-cyan-300/30 text-white;
+  }
 }
 
 @layer components {
   .glass-card {
-    @apply rounded-3xl border border-white/15 bg-white/10 shadow-glass backdrop-blur-xl;
+    @apply border border-white/10 bg-white/10 shadow-glass backdrop-blur-lg;
   }
 
   .glass-button {
-    @apply inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/15;
+    @apply inline-flex items-center justify-center border border-white/10 bg-white/10 px-5 py-3 text-sm font-semibold tracking-wide text-white transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-105 hover:bg-white/15 hover:shadow-lg hover:shadow-cyan-500/20 active:scale-95;
   }
 
   .primary-button {
-    @apply inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-500 to-violet-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-cyan-400/20;
+    @apply inline-flex items-center justify-center bg-gradient-to-r from-cyan-400 via-sky-500 to-violet-500 px-5 py-3 text-sm font-semibold tracking-wide text-slate-950 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 active:scale-95;
   }
 
   .section-shell {
-    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply w-full px-6 lg:px-16 xl:px-24 2xl:px-28;
   }
 
   .input-field {
-    @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-cyan-300/60 focus:bg-white/10;
+    @apply w-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition-all duration-300 ease-out placeholder:text-slate-400 focus:border-cyan-300/60 focus:bg-white/10 focus:shadow-lg focus:shadow-cyan-500/10;
+  }
+
+  .solid-panel {
+    @apply border border-white/10 bg-slate-950/70;
+  }
+
+  .interactive-lift {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/20 active:scale-95;
+  }
+
+  .section-title {
+    @apply text-4xl font-semibold tracking-wide text-white md:text-5xl;
+  }
+
+  .section-copy {
+    @apply text-sm leading-8 text-slate-300 md:text-base;
   }
 }
