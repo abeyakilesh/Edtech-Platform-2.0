@@ -50,6 +50,14 @@ function CourseList() {
       rating: 5,
       login: true,
     },
+    {
+      id: 5,
+      name: "node",
+      price: 999,
+      image: react,
+      rating: 7,
+      login: true,
+    },
   ];
 
   // sort the courses by price in ascending order
