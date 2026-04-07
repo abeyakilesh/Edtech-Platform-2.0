@@ -63,7 +63,7 @@ function CourseList() {
   const courseList = courses.map((course) => (
     
     <Course
-      key={course.id} name={course.name} price={course.price}
+      key={course.id} name={course.name} price={course.price} 
       image={course.image} rating={course.rating} login={course.login} 
     />
 

@@ -12,6 +12,8 @@ function Navbar() {
         <button className="about">About</button>
         <button className="course">Course</button>
         <button className="contact">Contact</button>
+        {/* <button className="contact">Contact</button>
+        <button className="contact">Contact</button> */}
       </div>
     </div>
   );
