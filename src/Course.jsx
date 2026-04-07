@@ -1,10 +1,6 @@
-// importing a default image in case a course image is missing
 import Loading from "./Image/Loading.png";
 
-// Course is a reusable card component
-// props contains the data sent from CourseList.jsx
 function Course(props) {
-  // this function runs when the Buy Now button is clicked
   function handleBuyNow() {
     console.log("Purchased");
   }
@@ -12,27 +8,30 @@ function Course(props) {
   return (
     props.name && (
       <div className="card">
-        {/* course image */}
         <img src={props.image || Loading} alt="Course" />
+        <div className="card-content">
+          <div className="course-meta">
+            <span className="course-level">{props.level}</span>
+            <span className="course-rating">★ {props.rating}</span>
+          </div>
 
-        {/* course title */}
-        <h1>{props.name}</h1>
+          <h3>{props.name}</h3>
+          <p className="course-description">{props.description}</p>
 
-        {/* course price */}
-        <h1>{props.price}</h1>
+          <div className="course-footer">
+            <div>
+              <strong>₹{props.price}</strong>
+              <span>{props.lessons}</span>
+            </div>
 
-        {/* course rating */}
-        <span>{props.rating}</span>
-
-        {/* buy button for this course */}
-        <button className="buy-btn" onClick={handleBuyNow}>
-          Buy Now
-        </button>
-
+            <button className="buy-btn" onClick={handleBuyNow}>
+              Enroll Now
+            </button>
+          </div>
+        </div>
       </div>
     )
   );
 }
 
-// exporting this component so CourseList.jsx can use it many times
 export default Course;

@@ -9,82 +9,83 @@ import react from "./Image/react.png";
 
 // this component creates and displays the full course list
 function CourseList() {
-  // array of course objects
-  // each object stores the details for one course
   const courses = [
     {
-      // unique id for React key
       id: 1,
-      // course title
-      name: "Html",
-      // course price
+      name: "HTML Foundations",
       price: 99,
-      // image used in the card
       image: html,
-      // course rating
-      rating: 5,
-      // controls whether the course should be shown
+      rating: 4.7,
+      level: "Beginner",
+      lessons: "18 lessons",
+      description: "Create clean page structures and understand semantic web building blocks.",
       login: true,
     },
     {
       id: 2,
-      name: "CSS",
+      name: "CSS Mastery",
       price: 299,
       image: css,
-      rating: 5,
+      rating: 4.8,
+      level: "Beginner to Intermediate",
+      lessons: "24 lessons",
+      description: "Design responsive layouts, polished interfaces, and production-ready components.",
       login: true,
     },
     {
       id: 3,
-      name: "JS",
+      name: "JavaScript Bootcamp",
       price: 499,
       image: js,
-      rating: 5,
+      rating: 4.9,
+      level: "Intermediate",
+      lessons: "32 lessons",
+      description: "Learn core logic, DOM interaction, APIs, and modern JavaScript practices.",
       login: true,
     },
     {
       id: 4,
-      name: "React",
+      name: "React Development",
       price: 799,
       image: react,
-      rating: 5,
+      rating: 4.9,
+      level: "Intermediate",
+      lessons: "28 lessons",
+      description: "Build fast single-page apps with reusable components and state-driven UI.",
       login: true,
     },
     {
       id: 5,
-      name: "node",
+      name: "Node.js Backend",
       price: 999,
       image: react,
-      rating: 7,
+      rating: 4.8,
+      level: "Advanced",
+      lessons: "30 lessons",
+      description: "Create scalable servers, APIs, and database-backed applications for real products.",
       login: true,
     },
   ];
 
-  // sort the courses by price in ascending order
-  // a and b are two course objects picked by JavaScript during sorting
-  // if result is negative, a comes first
-  // if result is positive, b comes first
   courses.sort((a, b) => a.price - b.price);
 
-  // map goes through each course object one by one
-  // for every object, it creates one <Course /> component
   const courseList = courses.map((course) => (
-    
     <Course
-      key={course.id} name={course.name} price={course.price} 
-      image={course.image} rating={course.rating} login={course.login} 
+      key={course.id}
+      name={course.name}
+      price={course.price}
+      image={course.image}
+      rating={course.rating}
+      level={course.level}
+      lessons={course.lessons}
+      description={course.description}
+      login={course.login}
     />
-
   ));
 
-  // return the final UI
-  // {courseList} displays all Course components created by map
   return (
-    <div className="course-list">
-      {courseList} 
-    </div>
+    <div className="course-list">{courseList}</div>
   );
 }
 
-// exporting this component so App.jsx can use it
 export default CourseList;

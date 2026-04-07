@@ -1,21 +1,24 @@
 // Navbar creates the top section of the page
 function Navbar() {
   return (
-    <div className="navbar">
-      {/* website name/logo text */}
-      <h3>Edutech</h3>
-
-      {/* wrapper for navigation buttons */}
-      <div className="nav-links">
-        {/* navigation buttons */}
-        <button className="home">Home</button>
-        <button className="about">About</button>
-        <button className="course">Course</button>
-        <button className="contact">Contact</button>
-        {/* <button className="contact">Contact</button>
-        <button className="contact">Contact</button> */}
+    <header className="navbar">
+      <div className="brand-block">
+        <span className="brand-mark">E</span>
+        <div>
+          <h3>EduCore</h3>
+          <p>Learn. Build. Get hired.</p>
+        </div>
       </div>
-    </div>
+
+      <nav className="nav-links">
+        <a href="#home">Home</a>
+        <a href="#programs">Programs</a>
+        <a href="#mentors">Mentors</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <button className="nav-cta">Start Learning</button>
+    </header>
   );
 }
 
